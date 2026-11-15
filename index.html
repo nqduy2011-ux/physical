@@ -363,11 +363,6 @@ min="1" max="5" value="1">
  Hiển thị vx và vy
 </label>
 
-<label>
-<input type="checkbox" id="showTrajectory" checked>
- Hiển thị quỹ đạo nét đứt
-</label>
-
 </div>
 
 <div class="buttons">
@@ -416,7 +411,6 @@ P = mg
 <span><i class="dot" style="background:#ef4444"></i> Trọng lực P</span>
 <span><i class="dot" style="background:#facc15"></i> Vận tốc v</span>
 <span><i class="dot" style="background:#a78bfa"></i> Thành phần vx, vy</span>
-<span><i class="dot" style="background:#38bdf8"></i> Quỹ đạo dự kiến</span>
 <span><i class="dot" style="background:#fb923c"></i> Quỹ đạo thực tế</span>
 </div>
 
@@ -835,34 +829,6 @@ function draw() {
         baseY-13
     );
 
-    // QUỸ ĐẠO DỰ KIẾN NÉT ĐỨT
-
-    if(checked("showTrajectory")) {
-
-        ctx.beginPath();
-
-        ctx.strokeStyle="#38bdf8";
-        ctx.lineWidth=2.5;
-        ctx.setLineDash([9,6]);
-
-        const steps=250;
-
-        for(let i=0;i<=steps;i++) {
-
-            const t=d.flight*i/steps;
-            const p=position(t);
-
-            if(i===0) {
-                ctx.moveTo(sx(p.x),sy(p.y));
-            } else {
-                ctx.lineTo(sx(p.x),sy(p.y));
-            }
-        }
-
-        ctx.stroke();
-        ctx.setLineDash([]);
-    }
-
     // MỤC TIÊU
 
     const targetX=sx(tx);
@@ -1066,6 +1032,16 @@ function distanceToSegment(a,b,c) {
 }
 
 // =================================
+// CẬP NHẬT ĐIỂM SỐ
+// =================================
+
+function updateScore() {
+    $("score").textContent = score;
+    $("shots").textContent = shots;
+    $("hits").textContent = hits;
+}
+
+// =================================
 // 10. BẮT ĐẦU NÉM
 // =================================
 
@@ -1257,8 +1233,7 @@ const parameterIds=[
     "simSpeed",
     "showForce",
     "showVelocity",
-    "showComponents",
-    "showTrajectory"
+    "showComponents"
 ];
 
 parameterIds.forEach(id=>{
