@@ -7,266 +7,441 @@
 <title>Physics Target Challenge</title>
 
 <style>
-* {box-sizing:border-box}
+* {
+    box-sizing: border-box;
+}
 
 body {
-    margin:0;
-    padding:20px;
-    background:#0b1120;
-    color:#e2e8f0;
-    font-family:Arial,sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #0b1120;
+    color: #e2e8f0;
+    font-family: Arial, sans-serif;
 }
 
-.container {max-width:1250px;margin:auto}
+.container {
+    max-width: 1400px;
+    margin: auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 22px;
+}
 
 h1 {
-    text-align:center;
-    color:#38bdf8;
-    margin-bottom:5px;
+    color: #38bdf8;
+    margin-bottom: 8px;
 }
 
-.sub {
-    text-align:center;
-    color:#94a3b8;
-    margin-bottom:22px;
+header p {
+    color: #94a3b8;
 }
 
 .layout {
-    display:grid;
-    grid-template-columns:290px 1fr;
-    gap:16px;
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 16px;
 }
 
-.panel,.game {
-    background:#172033;
-    border:1px solid #334155;
-    border-radius:13px;
-    padding:17px;
+.panel, .game {
+    background: #172033;
+    border: 1px solid #334155;
+    border-radius: 14px;
+    padding: 18px;
 }
 
 h2 {
-    color:#38bdf8;
-    font-size:18px;
-    margin-top:0;
+    color: #38bdf8;
+    font-size: 18px;
+    margin-top: 0;
+}
+
+.section {
+    border-bottom: 1px solid #334155;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 label {
-    display:block;
-    font-size:14px;
-    margin-top:16px;
-    margin-bottom:7px;
+    display: block;
+    font-size: 13px;
+    margin-top: 15px;
+    margin-bottom: 7px;
 }
 
 .value {
-    float:right;
-    color:#38bdf8;
-    font-weight:bold;
+    float: right;
+    color: #38bdf8;
+    font-weight: bold;
 }
 
 input[type=range] {
-    width:100%;
-    accent-color:#38bdf8;
+    width: 100%;
+    accent-color: #38bdf8;
+    cursor: pointer;
 }
 
 select {
-    width:100%;
-    padding:10px;
-    background:#0f172a;
-    color:white;
-    border:1px solid #475569;
-    border-radius:7px;
+    width: 100%;
+    padding: 10px;
+    color: white;
+    background: #0f172a;
+    border: 1px solid #475569;
+    border-radius: 7px;
 }
 
 button {
-    padding:11px;
-    border:0;
-    border-radius:8px;
-    background:#0284c7;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
+    border: none;
+    padding: 11px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    background: #0284c7;
 }
 
-button:hover {filter:brightness(1.2)}
-
-.controls {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    margin-top:20px;
+button:hover {
+    filter: brightness(1.2);
 }
 
-.reset {background:#475569}
-.random {background:#7c3aed}
-.full {grid-column:span 2}
+.buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.random {
+    background: #7c3aed;
+    grid-column: span 2;
+}
+
+.reset {
+    background: #475569;
+    grid-column: span 2;
+}
 
 #canvas {
-    display:block;
-    width:100%;
-    height:480px;
-    background:#0b1425;
-    border-radius:9px;
+    width: 100%;
+    height: 520px;
+    display: block;
+    background: #0b1425;
+    border-radius: 10px;
 }
 
 .stats {
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:9px;
-    margin-top:12px;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 9px;
+    margin-top: 12px;
 }
 
 .stat {
-    background:#0f172a;
-    padding:12px 5px;
-    text-align:center;
-    border-radius:8px;
+    background: #0f172a;
+    padding: 12px 5px;
+    border-radius: 8px;
+    text-align: center;
 }
 
 .stat small {
-    display:block;
-    color:#94a3b8;
-    margin-bottom:7px;
+    color: #94a3b8;
+    display: block;
+    margin-bottom: 7px;
 }
 
 .stat strong {
-    color:#38bdf8;
-    font-size:16px;
+    color: #38bdf8;
+    font-size: 16px;
 }
-
-.target-info,.message,.score {
-    background:#0f172a;
-    padding:13px;
-    border-radius:9px;
-    margin-top:12px;
-    line-height:1.8;
-}
-
-.target-info strong {color:#facc15}
 
 .message {
-    text-align:center;
-    font-weight:bold;
-    color:#facc15;
-    font-size:16px;
+    background: #0f172a;
+    color: #facc15;
+    padding: 14px;
+    border-radius: 9px;
+    margin-top: 12px;
+    text-align: center;
+    font-weight: bold;
 }
 
 .score {
-    display:flex;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:8px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 8px;
+    margin-top: 12px;
 }
 
-.score strong {color:#4ade80}
+.score div {
+    background: #0f172a;
+    padding: 12px 5px;
+    border-radius: 8px;
+    text-align: center;
+}
 
-@media(max-width:850px) {
-    .layout {grid-template-columns:1fr}
-    .stats {grid-template-columns:repeat(2,1fr)}
-    #canvas {height:370px}
+.score strong {
+    color: #4ade80;
+}
+
+.info {
+    background: #0f172a;
+    padding: 14px;
+    margin-top: 12px;
+    border-radius: 9px;
+    line-height: 2;
+    font-size: 13px;
+}
+
+.info strong {
+    color: #facc15;
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 13px;
+    margin-top: 13px;
+    font-size: 12px;
+    color: #cbd5e1;
+}
+
+.legend span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.formula {
+    line-height: 2;
+    color: #cbd5e1;
+    font-size: 13px;
+}
+
+@media(max-width:900px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    #canvas {
+        height: 400px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+@media(max-width:450px) {
+    body {
+        padding: 8px;
+    }
+
+    .panel,.game {
+        padding: 12px;
+    }
+
+    .score {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
-<h1>🎯 PHYSICS TARGET CHALLENGE</h1>
-<p class="sub">
-Trò chơi mô phỏng thí nghiệm ném ngang và ném xiên - Vật lí 10
-</p>
+<header>
+    <h1>🎯 PHYSICS TARGET CHALLENGE</h1>
+    <p>PHÒNG THÍ NGHIỆM VẬT LÍ 10 - CHUYỂN ĐỘNG NÉM</p>
+</header>
 
 <div class="layout">
 
 <!-- BẢNG ĐIỀU KHIỂN -->
+
 <div class="panel">
 
-<h2>⚙ ĐIỀU KHIỂN</h2>
+<h2>⚙ BẢNG ĐIỀU KHIỂN</h2>
 
-<label>Chế độ chuyển động</label>
+<div class="section">
+
+<label>Chọn chế độ ném</label>
+
 <select id="mode">
-<option value="horizontal">Ném ngang</option>
-<option value="oblique">Ném xiên</option>
+    <option value="horizontal">Ném ngang</option>
+    <option value="oblique">Ném xiên</option>
 </select>
 
 <label>
 Vận tốc ban đầu
 <span class="value" id="v0Val">20 m/s</span>
 </label>
-<input id="v0" type="range" min="1" max="50"
-value="20">
+
+<input type="range" id="v0"
+min="1" max="60" value="20">
 
 <label>
 Góc ném
 <span class="value" id="angleVal">45°</span>
 </label>
-<input id="angle" type="range" min="0" max="89"
-value="45">
+
+<input type="range" id="angle"
+min="0" max="89" value="45">
 
 <label>
 Độ cao bệ phóng
 <span class="value" id="heightVal">10 m</span>
 </label>
-<input id="height" type="range" min="0" max="30"
-value="10">
+
+<input type="range" id="height"
+min="0" max="50" value="10">
+
+</div>
+
+<div class="section">
+
+<h2>🎯 VỊ TRÍ MỤC TIÊU</h2>
 
 <label>
-Vị trí ngang mục tiêu X
+Tọa độ X
 <span class="value" id="txVal">30 m</span>
 </label>
-<input id="tx" type="range" min="5" max="80"
-value="30">
+
+<input type="range" id="tx"
+min="5" max="200" value="30">
 
 <label>
-Độ cao mục tiêu Y
+Tọa độ Y
 <span class="value" id="tyVal">5 m</span>
 </label>
-<input id="ty" type="range" min="0" max="35"
-value="5">
 
-<div class="controls">
+<input type="range" id="ty"
+min="0" max="100" value="5">
+
+<label>
+Đường kính mục tiêu
+<span class="value" id="targetSizeVal">3 m</span>
+</label>
+
+<input type="range" id="targetSize"
+min="1" max="8" value="3">
+
+</div>
+
+<div class="section">
+
+<h2>📐 HIỂN THỊ</h2>
+
+<label>
+Tốc độ mô phỏng
+<span class="value" id="speedVal">1x</span>
+</label>
+
+<input type="range" id="simSpeed"
+min="1" max="5" value="1">
+
+<label>
+<input type="checkbox" id="showForce" checked>
+ Hiển thị vectơ trọng lực P
+</label>
+
+<label>
+<input type="checkbox" id="showVelocity" checked>
+ Hiển thị vectơ vận tốc v
+</label>
+
+<label>
+<input type="checkbox" id="showComponents" checked>
+ Hiển thị vx và vy
+</label>
+
+<label>
+<input type="checkbox" id="showTrajectory" checked>
+ Hiển thị quỹ đạo nét đứt
+</label>
+
+</div>
+
+<div class="buttons">
+
 <button onclick="shoot()">▶ NÉM BÓNG</button>
+
 <button onclick="pauseGame()">Ⅱ TẠM DỪNG</button>
-<button class="random full" onclick="randomTarget()">
-🎲 MỤC TIÊU NGẪU NHIÊN
+
+<button class="random" onclick="randomTarget()">
+🎲 TẠO MỤC TIÊU NGẪU NHIÊN
 </button>
-<button class="reset full" onclick="resetGame()">
+
+<button class="reset" onclick="resetGame()">
 ↻ CHƠI LẠI LƯỢT
 </button>
-</div>
-
-<div class="target-info">
-<b>🎯 MỤC TIÊU HIỆN TẠI</b><br>
-Tọa độ X: <strong id="targetX">30 m</strong><br>
-Tọa độ Y: <strong id="targetY">5 m</strong><br>
-Đơn vị tọa độ: mét (m)
-</div>
 
 </div>
 
-<!-- KHU VỰC TRÒ CHƠI -->
+<div class="info">
+<b>🎯 TỌA ĐỘ MỤC TIÊU</b><br>
+X = <strong id="targetX">30 m</strong><br>
+Y = <strong id="targetY">5 m</strong><br>
+Đơn vị: mét (m)
+</div>
+
+<div class="info formula">
+<b>📚 CÔNG THỨC VẬT LÍ</b><br>
+vx = v₀.cos(α)<br>
+vy = v₀.sin(α) - gt<br>
+x = vx.t<br>
+y = h + v₀.sin(α).t - ½gt²<br>
+P = mg
+</div>
+
+</div>
+
+<!-- KHU VỰC MÔ PHỎNG -->
+
 <div class="game">
 
 <h2>🔬 KHU VỰC THÍ NGHIỆM</h2>
 
 <canvas id="canvas"></canvas>
 
+<div class="legend">
+<span><i class="dot" style="background:#ef4444"></i> Trọng lực P</span>
+<span><i class="dot" style="background:#facc15"></i> Vận tốc v</span>
+<span><i class="dot" style="background:#a78bfa"></i> Thành phần vx, vy</span>
+<span><i class="dot" style="background:#38bdf8"></i> Quỹ đạo dự kiến</span>
+<span><i class="dot" style="background:#fb923c"></i> Quỹ đạo thực tế</span>
+</div>
+
 <div class="stats">
+
 <div class="stat">
 <small>Thời gian</small>
 <strong id="time">0.00 s</strong>
 </div>
+
 <div class="stat">
 <small>Tọa độ X</small>
 <strong id="x">0.00 m</strong>
 </div>
+
 <div class="stat">
 <small>Độ cao Y</small>
 <strong id="y">10.00 m</strong>
 </div>
+
 <div class="stat">
 <small>Vận tốc</small>
 <strong id="velocity">20.00 m/s</strong>
 </div>
+
 </div>
 
 <div class="message" id="message">
@@ -274,17 +449,35 @@ Sẵn sàng! Hãy điều chỉnh thông số và ném bóng.
 </div>
 
 <div class="score">
-<span>🏆 Điểm: <strong id="score">0</strong></span>
-<span>🎯 Số lần ném: <strong id="shots">0</strong></span>
-<span>✅ Trúng: <strong id="hits">0</strong></span>
+
+<div>🏆 Điểm<br><strong id="score">0</strong></div>
+<div>🚀 Số lần ném<br><strong id="shots">0</strong></div>
+<div>🎯 Số lần trúng<br><strong id="hits">0</strong></div>
+
 </div>
 
-<div class="target-info">
-<b>📐 THÔNG TIN VẬT LÍ</b><br>
-Vận tốc ngang: <strong id="vx">0 m/s</strong><br>
-Vận tốc đứng ban đầu: <strong id="vy">0 m/s</strong><br>
-Thời gian bay dự kiến: <strong id="flight">0 s</strong><br>
-Tầm xa dự kiến: <strong id="range">0 m</strong>
+<div class="info">
+
+<b>📊 THÔNG SỐ CHUYỂN ĐỘNG</b><br>
+
+Vận tốc ngang vx:
+<strong id="vx">14.14 m/s</strong><br>
+
+Vận tốc đứng ban đầu:
+<strong id="vy0">14.14 m/s</strong><br>
+
+Vận tốc đứng hiện tại vy:
+<strong id="vyNow">14.14 m/s</strong><br>
+
+Thời gian bay dự kiến:
+<strong id="flight">0.00 s</strong><br>
+
+Tầm xa dự kiến:
+<strong id="range">0.00 m</strong><br>
+
+Độ cao cực đại:
+<strong id="maxHeight">0.00 m</strong>
+
 </div>
 
 </div>
@@ -293,10 +486,19 @@ Tầm xa dự kiến: <strong id="range">0 m</strong>
 
 <script>
 
+// =================================
+// 1. KHỞI TẠO
+// =================================
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 const $ = id => document.getElementById(id);
+
+const g = 9.8;
+const ballRadius = 0.7;
+const targetRadius = () =>
+    Number($("targetSize").value)/2;
 
 let elapsed = 0;
 let running = false;
@@ -308,82 +510,182 @@ let score = 0;
 let shots = 0;
 let hits = 0;
 
-const g = 9.8;
-const radius = 1.25;
+let trail = [];
 
-function data() {
+// =================================
+// 2. LẤY THÔNG SỐ
+// =================================
+
+function getData() {
 
     const v0 = Number($("v0").value);
+
     const angle = $("mode").value === "horizontal"
-        ? 0 : Number($("angle").value);
+        ? 0
+        : Number($("angle").value);
 
     const h = Number($("height").value);
-    const a = angle*Math.PI/180;
 
-    const vx = v0*Math.cos(a);
-    const vy = v0*Math.sin(a);
+    const rad = angle*Math.PI/180;
+
+    const vx = v0*Math.cos(rad);
+    const vy0 = v0*Math.sin(rad);
 
     const flight =
-        (vy+Math.sqrt(vy*vy+2*g*h))/g;
+        (vy0 + Math.sqrt(vy0*vy0 + 2*g*h))/g;
 
     const range = vx*flight;
 
-    const maxHeight = h+vy*vy/(2*g);
+    const maxHeight =
+        h + vy0*vy0/(2*g);
 
-    return {v0,angle,h,vx,vy,flight,range,maxHeight};
+    return {
+        v0,angle,h,vx,vy0,
+        flight,range,maxHeight
+    };
 }
+
+// =================================
+// 3. TÍNH TOÁN CHUYỂN ĐỘNG
+// =================================
 
 function position(t) {
 
-    const d = data();
+    const d = getData();
 
-    return {
-        x:d.vx*t,
-        y:d.h+d.vy*t-0.5*g*t*t,
-        vx:d.vx,
-        vy:d.vy-g*t,
-        speed:Math.sqrt(
-            d.vx*d.vx+(d.vy-g*t)**2
-        )
-    };
+    const x = d.vx*t;
+
+    const y = d.h + d.vy0*t - 0.5*g*t*t;
+
+    const vx = d.vx;
+    const vy = d.vy0-g*t;
+
+    const speed = Math.sqrt(vx*vx+vy*vy);
+
+    return {x,y,vx,vy,speed};
 }
+
+// =================================
+// 4. CẬP NHẬT THÔNG SỐ
+// =================================
 
 function updateLabels() {
 
     $("v0Val").textContent=$("v0").value+" m/s";
+
     $("angleVal").textContent=
-        ($("mode").value==="horizontal" ? 0:$("angle").value)+"°";
+        ($("mode").value==="horizontal"
+        ? 0 : $("angle").value)+"°";
+
     $("heightVal").textContent=$("height").value+" m";
+
     $("txVal").textContent=$("tx").value+" m";
+
     $("tyVal").textContent=$("ty").value+" m";
+
+    $("targetSizeVal").textContent=
+        $("targetSize").value+" m";
+
+    $("speedVal").textContent=$("simSpeed").value+"x";
+
+    $("angle").disabled=$("mode").value==="horizontal";
+
+    $("angle").style.opacity=
+        $("mode").value==="horizontal" ? ".35":"1";
 
     $("targetX").textContent=$("tx").value+" m";
     $("targetY").textContent=$("ty").value+" m";
 
-    $("angle").disabled=$("mode").value==="horizontal";
-    $("angle").style.opacity=
-        $("mode").value==="horizontal" ? ".35":"1";
-
-    const d=data();
+    const d=getData();
 
     $("vx").textContent=d.vx.toFixed(2)+" m/s";
-    $("vy").textContent=d.vy.toFixed(2)+" m/s";
+
+    $("vy0").textContent=d.vy0.toFixed(2)+" m/s";
+
     $("flight").textContent=d.flight.toFixed(2)+" s";
+
     $("range").textContent=d.range.toFixed(2)+" m";
+
+    $("maxHeight").textContent=
+        d.maxHeight.toFixed(2)+" m";
 
     if(!running) draw();
 }
 
-function resize() {
+// =================================
+// 5. ĐIỀU CHỈNH CANVAS
+// =================================
+
+function resizeCanvas() {
+
     const rect=canvas.getBoundingClientRect();
+
     const ratio=window.devicePixelRatio||1;
 
     canvas.width=rect.width*ratio;
     canvas.height=rect.height*ratio;
 
     ctx.setTransform(ratio,0,0,ratio,0,0);
+
     draw();
 }
+
+// =================================
+// 6. VẼ MŨI TÊN VECTƠ
+// =================================
+
+function drawArrow(x1,y1,x2,y2,color,label) {
+
+    const dx=x2-x1;
+    const dy=y2-y1;
+
+    const angle=Math.atan2(dy,dx);
+
+    ctx.strokeStyle=color;
+    ctx.fillStyle=color;
+    ctx.lineWidth=2.5;
+
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);
+    ctx.lineTo(x2,y2);
+    ctx.stroke();
+
+    // Đầu mũi tên
+
+    ctx.beginPath();
+
+    ctx.moveTo(x2,y2);
+
+    ctx.lineTo(
+        x2-9*Math.cos(angle-0.5),
+        y2-9*Math.sin(angle-0.5)
+    );
+
+    ctx.lineTo(
+        x2-9*Math.cos(angle+0.5),
+        y2-9*Math.sin(angle+0.5)
+    );
+
+    ctx.closePath();
+    ctx.fill();
+
+    // Nhãn
+
+    ctx.font="bold 13px Arial";
+    ctx.fillText(label,x2+5,y2-7);
+}
+
+// =================================
+// 7. KIỂM TRA VECTƠ ĐƯỢC BẬT
+// =================================
+
+function checked(id) {
+    return $(id).checked;
+}
+
+// =================================
+// 8. VẼ TOÀN BỘ THÍ NGHIỆM
+// =================================
 
 function draw() {
 
@@ -392,18 +694,25 @@ function draw() {
 
     if(!W||!H)return;
 
-    const d=data();
+    const d=getData();
 
     const tx=Number($("tx").value);
     const ty=Number($("ty").value);
 
     ctx.clearRect(0,0,W,H);
 
-    // Tỉ lệ không gian
-    const maxX=Math.max(d.range,tx+5,20)*1.12;
+    // Tự động điều chỉnh tỷ lệ
+
+    const maxX=Math.max(
+        d.range+5,tx+targetRadius()+5,20
+    )*1.08;
+
     const maxY=Math.max(
-        d.maxHeight,ty+3,d.h+3,10
-    )*1.18;
+        d.maxHeight+5,
+        ty+targetRadius()+5,
+        d.h+5,
+        10
+    )*1.08;
 
     const margin=48;
 
@@ -418,105 +727,176 @@ function draw() {
     const sx=x=>ox+x*scale;
     const sy=y=>ground-y*scale;
 
-    // Lưới
-    ctx.strokeStyle="#24334b";
+    // Lưới tọa độ
+
+    ctx.strokeStyle="#25344b";
     ctx.lineWidth=1;
 
-    for(let i=0;i<W;i+=40) {
+    for(let x=0;x<W;x+=40) {
         ctx.beginPath();
-        ctx.moveTo(i,0);
-        ctx.lineTo(i,H);
+        ctx.moveTo(x,0);
+        ctx.lineTo(x,H);
         ctx.stroke();
     }
 
-    for(let i=0;i<H;i+=40) {
+    for(let y=0;y<H;y+=40) {
         ctx.beginPath();
-        ctx.moveTo(0,i);
-        ctx.lineTo(W,i);
+        ctx.moveTo(0,y);
+        ctx.lineTo(W,y);
         ctx.stroke();
+    }
+
+    // Trục tọa độ
+
+    ctx.strokeStyle="#94a3b8";
+    ctx.lineWidth=1.5;
+
+    ctx.beginPath();
+    ctx.moveTo(ox,10);
+    ctx.lineTo(ox,ground);
+    ctx.lineTo(W-5,ground);
+    ctx.stroke();
+
+    ctx.fillStyle="#cbd5e1";
+    ctx.font="12px Arial";
+
+    ctx.fillText("Y (m)",ox-35,15);
+    ctx.fillText("X (m)",W-42,ground+35);
+
+    // Các mốc trên trục X
+
+    for(let x=0;x<=maxX;x+=20) {
+
+        ctx.fillText(
+            x+"",
+            sx(x)-8,
+            ground+17
+        );
+    }
+
+    // Các mốc trên trục Y
+
+    for(let y=0;y<=maxY;y+=20) {
+
+        ctx.fillText(
+            y+"",
+            ox-25,
+            sy(y)+4
+        );
     }
 
     // Mặt đất
+
     ctx.strokeStyle="#4ade80";
-    ctx.lineWidth=3;
+    ctx.lineWidth=4;
+
     ctx.beginPath();
     ctx.moveTo(0,ground);
     ctx.lineTo(W,ground);
     ctx.stroke();
 
-    // Thước tọa độ ngang
-    ctx.fillStyle="#94a3b8";
-    ctx.font="11px Arial";
-    ctx.fillText("0 m",ox-10,ground+18);
+    // BỆ PHÓNG
 
-    for(let x=10;x<=maxX;x+=10) {
-        ctx.fillText(x+" m",sx(x)-10,ground+18);
-    }
-
-    // Bệ phóng
     const baseX=sx(0);
     const baseY=sy(d.h);
 
     ctx.fillStyle="#64748b";
-    ctx.fillRect(baseX-17,baseY,34,ground-baseY);
+
+    ctx.fillRect(
+        baseX-17,
+        baseY,
+        34,
+        ground-baseY
+    );
 
     ctx.fillStyle="#94a3b8";
-    ctx.fillRect(baseX-28,ground-5,56,8);
+
+    ctx.fillRect(
+        baseX-30,
+        ground-6,
+        60,
+        10
+    );
 
     ctx.fillStyle="#38bdf8";
+
     ctx.beginPath();
     ctx.arc(baseX,baseY,8,0,Math.PI*2);
     ctx.fill();
 
     ctx.fillStyle="white";
-    ctx.fillText("BỆ PHÓNG",baseX+10,ground+35);
-    ctx.fillText("h = "+d.h+" m",baseX+12,baseY-13);
+    ctx.font="12px Arial";
 
-    // Quỹ đạo dự kiến
-    ctx.beginPath();
-    ctx.setLineDash([6,5]);
-    ctx.strokeStyle="#38bdf8";
-    ctx.lineWidth=2;
+    ctx.fillText("BỆ PHÓNG",baseX+12,ground+32);
 
-    for(let t=0;t<=d.flight;t+=d.flight/250) {
-        const p=position(t);
-        if(t===0)ctx.moveTo(sx(p.x),sy(p.y));
-        else ctx.lineTo(sx(p.x),sy(p.y));
+    ctx.fillText(
+        "h = "+d.h+" m",
+        baseX+12,
+        baseY-13
+    );
+
+    // QUỸ ĐẠO DỰ KIẾN NÉT ĐỨT
+
+    if(checked("showTrajectory")) {
+
+        ctx.beginPath();
+
+        ctx.strokeStyle="#38bdf8";
+        ctx.lineWidth=2.5;
+        ctx.setLineDash([9,6]);
+
+        const steps=250;
+
+        for(let i=0;i<=steps;i++) {
+
+            const t=d.flight*i/steps;
+            const p=position(t);
+
+            if(i===0) {
+                ctx.moveTo(sx(p.x),sy(p.y));
+            } else {
+                ctx.lineTo(sx(p.x),sy(p.y));
+            }
+        }
+
+        ctx.stroke();
+        ctx.setLineDash([]);
     }
 
-    ctx.stroke();
-    ctx.setLineDash([]);
+    // MỤC TIÊU
 
-    // Mục tiêu
     const targetX=sx(tx);
     const targetY=sy(ty);
-    const targetR=Math.max(9,radius*scale);
+
+    const targetR=Math.max(
+        6,targetRadius()*scale
+    );
+
+    // Vòng mục tiêu
 
     ctx.strokeStyle="#facc15";
     ctx.lineWidth=4;
 
     ctx.beginPath();
-    ctx.arc(targetX,targetY,targetR,0,Math.PI*2);
+    ctx.arc(
+        targetX,
+        targetY,
+        targetR,
+        0,
+        Math.PI*2
+    );
     ctx.stroke();
 
     ctx.fillStyle="#facc15";
+
     ctx.beginPath();
     ctx.arc(targetX,targetY,4,0,Math.PI*2);
     ctx.fill();
 
-    ctx.fillStyle="#facc15";
-    ctx.font="bold 13px Arial";
+    // Đường dóng tọa độ
 
-    // Ghi tọa độ mục tiêu
-    ctx.fillText(
-        "MỤC TIÊU ("+tx+","+ty+") m",
-        Math.min(targetX+12,W-155),
-        Math.max(17,targetY-15)
-    );
-
-    // Đường dóng tọa độ mục tiêu
     ctx.strokeStyle="#facc15";
-    ctx.setLineDash([3,5]);
+    ctx.setLineDash([4,5]);
 
     ctx.beginPath();
     ctx.moveTo(targetX,targetY);
@@ -530,33 +910,116 @@ function draw() {
 
     ctx.setLineDash([]);
 
-    // Vị trí bóng
+    // Tên mục tiêu
+
+    ctx.fillStyle="#facc15";
+    ctx.font="bold 13px Arial";
+
+    ctx.fillText(
+        "MỤC TIÊU ("+tx+", "+ty+") m",
+        Math.min(targetX+12,W-170),
+        Math.max(16,targetY-15)
+    );
+
+    // VỊ TRÍ BÓNG
+
     const p=position(Math.min(elapsed,d.flight));
 
     const bx=sx(p.x);
     const by=sy(Math.max(0,p.y));
 
-    // Vệt quỹ đạo đã đi
-    if(elapsed>0) {
+    // QUỸ ĐẠO THỰC TẾ
+
+    if(trail.length>1) {
+
         ctx.beginPath();
+
         ctx.strokeStyle="#fb923c";
         ctx.lineWidth=3;
 
-        const end=Math.min(elapsed,d.flight);
+        trail.forEach((point,i)=>{
 
-        for(let t=0;t<=end;t+=Math.max(end/100,0.001)) {
-            const q=position(t);
+            if(i===0) {
+                ctx.moveTo(sx(point.x),sy(point.y));
+            } else {
+                ctx.lineTo(sx(point.x),sy(point.y));
+            }
 
-            if(t===0)ctx.moveTo(sx(q.x),sy(q.y));
-            else ctx.lineTo(sx(q.x),sy(q.y));
-        }
+        });
 
         ctx.stroke();
     }
 
-    // Bóng
+    // VECTƠ TRỌNG LỰC P
+
+    if(checked("showForce")) {
+
+        drawArrow(
+            bx,by,
+            bx,by+42,
+            "#ef4444",
+            "P = mg"
+        );
+    }
+
+    // VECTƠ VẬN TỐC V
+
+    if(checked("showVelocity")) {
+
+        const length=65;
+
+        const magnitude=Math.max(p.speed,0.01);
+
+        const dx=p.vx/magnitude*length;
+        const dy=-p.vy/magnitude*length;
+
+        drawArrow(
+            bx,by,
+            bx+dx,
+            by+dy,
+            "#facc15",
+            "v"
+        );
+    }
+
+    // THÀNH PHẦN VX VÀ VY
+
+    if(checked("showComponents")) {
+
+        const lengthX=45;
+
+        const lengthY=45;
+
+        // VX
+
+        if(Math.abs(p.vx)>0.01) {
+
+            drawArrow(
+                bx,by,
+                bx+lengthX,by,
+                "#a78bfa",
+                "vx"
+            );
+        }
+
+        // VY
+
+        if(Math.abs(p.vy)>0.01) {
+
+            drawArrow(
+                bx,by,
+                bx,by-p.vy/Math.abs(p.vy)*lengthY,
+                "#a78bfa",
+                "vy"
+            );
+        }
+    }
+
+    // VẼ BÓNG
+
     ctx.shadowColor="#fb923c";
-    ctx.shadowBlur=15;
+    ctx.shadowBlur=16;
+
     ctx.fillStyle="#fb923c";
 
     ctx.beginPath();
@@ -566,40 +1029,67 @@ function draw() {
     ctx.shadowBlur=0;
 
     // Cập nhật số liệu
+
     $("time").textContent=elapsed.toFixed(2)+" s";
+
     $("x").textContent=p.x.toFixed(2)+" m";
+
     $("y").textContent=Math.max(0,p.y).toFixed(2)+" m";
+
     $("velocity").textContent=p.speed.toFixed(2)+" m/s";
+
+    $("vyNow").textContent=p.vy.toFixed(2)+" m/s";
 }
 
-function updateScore() {
-    $("score").textContent=score;
-    $("shots").textContent=shots;
-    $("hits").textContent=hits;
+// =================================
+// 9. KIỂM TRA BÓNG TRÚNG MỤC TIÊU
+// =================================
+
+function distanceToSegment(a,b,c) {
+
+    const dx=b.x-a.x;
+    const dy=b.y-a.y;
+
+    const len=dx*dx+dy*dy;
+
+    let t=0;
+
+    if(len>0) {
+        t=((c.x-a.x)*dx+(c.y-a.y)*dy)/len;
+        t=Math.max(0,Math.min(1,t));
+    }
+
+    const px=a.x+t*dx;
+    const py=a.y+t*dy;
+
+    return Math.hypot(c.x-px,c.y-py);
 }
+
+// =================================
+// 10. BẮT ĐẦU NÉM
+// =================================
 
 function shoot() {
 
     if(running)return;
 
-    const d=data();
+    const d=getData();
 
     if(finished) {
         elapsed=0;
+        trail=[];
         finished=false;
     }
 
     shots++;
     updateScore();
 
-    $("message").textContent="🚀 Bóng đang chuyển động!";
+    $("message").textContent="🚀 BÓNG ĐANG BAY!";
 
     running=true;
     lastTime=0;
 
-    if(animationId!==null) {
-        cancelAnimationFrame(animationId);
-    }
+    let previous=position(elapsed);
 
     function animate(timestamp) {
 
@@ -607,23 +1097,44 @@ function shoot() {
 
         if(lastTime===0)lastTime=timestamp;
 
-        let dt=Math.min((timestamp-lastTime)/1000,0.05);
+        const dt=Math.min(
+            (timestamp-lastTime)/1000,
+            0.05
+        );
+
         lastTime=timestamp;
 
-        elapsed+=dt;
+        elapsed+=dt*Number($("simSpeed").value);
 
         const p=position(elapsed);
 
-        const tx=Number($("tx").value);
-        const ty=Number($("ty").value);
+        // Lưu đường bay
 
-        const distance=Math.sqrt(
-            (p.x-tx)**2+(p.y-ty)**2
+        trail.push({
+            x:p.x,
+            y:Math.max(0,p.y)
+        });
+
+        if(trail.length>1500) {
+            trail.shift();
+        }
+
+        // Kiểm tra va chạm trên đoạn đường vừa đi
+
+        const target={
+            x:Number($("tx").value),
+            y:Number($("ty").value)
+        };
+
+        const distance=distanceToSegment(
+            previous,
+            p,
+            target
         );
 
-        // Kiểm tra va chạm mục tiêu
-        if(distance<=radius) {
+        if(distance<=targetRadius()+ballRadius) {
 
+            // Dừng tại vị trí va chạm gần nhất
             elapsed=Math.min(elapsed,d.flight);
 
             running=false;
@@ -633,25 +1144,37 @@ function shoot() {
             score+=10;
 
             $("message").textContent=
-                "🎉 CHÚC MỪNG! BẠN ĐÃ TRÚNG MỤC TIÊU!";
+                "🎉 CHÍNH XÁC! BẠN ĐÃ TRÚNG MỤC TIÊU! +10 ĐIỂM";
 
             updateScore();
             draw();
+
             return;
         }
 
         if(elapsed>=d.flight) {
 
             elapsed=d.flight;
+
+            const landing=position(elapsed);
+
+            trail.push({
+                x:landing.x,
+                y:0
+            });
+
             running=false;
             finished=true;
 
             $("message").textContent=
-                "❌ CHƯA TRÚNG! Hãy điều chỉnh góc hoặc vận tốc.";
+                "❌ CHƯA TRÚNG! HÃY ĐIỀU CHỈNH LẠI THÔNG SỐ.";
 
             draw();
+
             return;
         }
+
+        previous=p;
 
         draw();
 
@@ -661,7 +1184,12 @@ function shoot() {
     animationId=requestAnimationFrame(animate);
 }
 
+// =================================
+// 11. TẠM DỪNG
+// =================================
+
 function pauseGame() {
+
     running=false;
 
     if(animationId!==null) {
@@ -670,29 +1198,39 @@ function pauseGame() {
     }
 
     if(!finished) {
-        $("message").textContent="⏸ Đã tạm dừng.";
+        $("message").textContent="⏸ ĐÃ TẠM DỪNG.";
     }
 }
+
+// =================================
+// 12. CHƠI LẠI
+// =================================
 
 function resetGame() {
 
     pauseGame();
 
     elapsed=0;
+    trail=[];
     finished=false;
 
     $("message").textContent=
-        "Sẵn sàng! Hãy điều chỉnh thông số và ném bóng.";
+        "SẴN SÀNG! HÃY ĐIỀU CHỈNH THÔNG SỐ VÀ NÉM BÓNG.";
 
     draw();
 }
+
+// =================================
+// 13. TẠO MỤC TIÊU NGẪU NHIÊN
+// =================================
 
 function randomTarget() {
 
     pauseGame();
 
-    const tx=Math.floor(Math.random()*56)+15;
-    const ty=Math.floor(Math.random()*16);
+    const tx=Math.floor(Math.random()*176)+15;
+
+    const ty=Math.floor(Math.random()*91)+5;
 
     $("tx").value=tx;
     $("ty").value=ty;
@@ -701,32 +1239,57 @@ function randomTarget() {
     updateLabels();
 
     $("message").textContent=
-        "🎲 Mục tiêu mới: ("+tx+","+ty+") m. Hãy thử sức!";
+        "🎲 MỤC TIÊU MỚI: ("+tx+", "+ty+") m";
 }
 
-// Thay đổi thông số
-[
-    "mode","v0","angle","height","tx","ty"
-].forEach(id=>{
+// =================================
+// 14. THAY ĐỔI THÔNG SỐ
+// =================================
+
+const parameterIds=[
+    "mode",
+    "v0",
+    "angle",
+    "height",
+    "tx",
+    "ty",
+    "targetSize",
+    "simSpeed",
+    "showForce",
+    "showVelocity",
+    "showComponents",
+    "showTrajectory"
+];
+
+parameterIds.forEach(id=>{
+
     $(id).addEventListener("input",()=>{
+
         if(running)pauseGame();
 
         elapsed=0;
+        trail=[];
         finished=false;
 
         $("message").textContent=
-            "Đã thay đổi thông số. Sẵn sàng thử lại!";
+            "THÔNG SỐ ĐÃ THAY ĐỔI. SẴN SÀNG THỬ LẠI!";
 
         updateLabels();
     });
+
 });
 
-window.addEventListener("resize",resize);
+// =================================
+// 15. KHỞI ĐỘNG
+// =================================
+
+window.addEventListener("resize",resizeCanvas);
 
 updateLabels();
-resize();
+resizeCanvas();
 updateScore();
 
 </script>
+
 </body>
 </html>
