@@ -1,0 +1,732 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Target Challenge</title>
+
+<style>
+* {box-sizing:border-box}
+
+body {
+    margin:0;
+    padding:20px;
+    background:#0b1120;
+    color:#e2e8f0;
+    font-family:Arial,sans-serif;
+}
+
+.container {max-width:1250px;margin:auto}
+
+h1 {
+    text-align:center;
+    color:#38bdf8;
+    margin-bottom:5px;
+}
+
+.sub {
+    text-align:center;
+    color:#94a3b8;
+    margin-bottom:22px;
+}
+
+.layout {
+    display:grid;
+    grid-template-columns:290px 1fr;
+    gap:16px;
+}
+
+.panel,.game {
+    background:#172033;
+    border:1px solid #334155;
+    border-radius:13px;
+    padding:17px;
+}
+
+h2 {
+    color:#38bdf8;
+    font-size:18px;
+    margin-top:0;
+}
+
+label {
+    display:block;
+    font-size:14px;
+    margin-top:16px;
+    margin-bottom:7px;
+}
+
+.value {
+    float:right;
+    color:#38bdf8;
+    font-weight:bold;
+}
+
+input[type=range] {
+    width:100%;
+    accent-color:#38bdf8;
+}
+
+select {
+    width:100%;
+    padding:10px;
+    background:#0f172a;
+    color:white;
+    border:1px solid #475569;
+    border-radius:7px;
+}
+
+button {
+    padding:11px;
+    border:0;
+    border-radius:8px;
+    background:#0284c7;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover {filter:brightness(1.2)}
+
+.controls {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:20px;
+}
+
+.reset {background:#475569}
+.random {background:#7c3aed}
+.full {grid-column:span 2}
+
+#canvas {
+    display:block;
+    width:100%;
+    height:480px;
+    background:#0b1425;
+    border-radius:9px;
+}
+
+.stats {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+    margin-top:12px;
+}
+
+.stat {
+    background:#0f172a;
+    padding:12px 5px;
+    text-align:center;
+    border-radius:8px;
+}
+
+.stat small {
+    display:block;
+    color:#94a3b8;
+    margin-bottom:7px;
+}
+
+.stat strong {
+    color:#38bdf8;
+    font-size:16px;
+}
+
+.target-info,.message,.score {
+    background:#0f172a;
+    padding:13px;
+    border-radius:9px;
+    margin-top:12px;
+    line-height:1.8;
+}
+
+.target-info strong {color:#facc15}
+
+.message {
+    text-align:center;
+    font-weight:bold;
+    color:#facc15;
+    font-size:16px;
+}
+
+.score {
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.score strong {color:#4ade80}
+
+@media(max-width:850px) {
+    .layout {grid-template-columns:1fr}
+    .stats {grid-template-columns:repeat(2,1fr)}
+    #canvas {height:370px}
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>🎯 PHYSICS TARGET CHALLENGE</h1>
+<p class="sub">
+Trò chơi mô phỏng thí nghiệm ném ngang và ném xiên - Vật lí 10
+</p>
+
+<div class="layout">
+
+<!-- BẢNG ĐIỀU KHIỂN -->
+<div class="panel">
+
+<h2>⚙ ĐIỀU KHIỂN</h2>
+
+<label>Chế độ chuyển động</label>
+<select id="mode">
+<option value="horizontal">Ném ngang</option>
+<option value="oblique">Ném xiên</option>
+</select>
+
+<label>
+Vận tốc ban đầu
+<span class="value" id="v0Val">20 m/s</span>
+</label>
+<input id="v0" type="range" min="1" max="50"
+value="20">
+
+<label>
+Góc ném
+<span class="value" id="angleVal">45°</span>
+</label>
+<input id="angle" type="range" min="0" max="89"
+value="45">
+
+<label>
+Độ cao bệ phóng
+<span class="value" id="heightVal">10 m</span>
+</label>
+<input id="height" type="range" min="0" max="30"
+value="10">
+
+<label>
+Vị trí ngang mục tiêu X
+<span class="value" id="txVal">30 m</span>
+</label>
+<input id="tx" type="range" min="5" max="80"
+value="30">
+
+<label>
+Độ cao mục tiêu Y
+<span class="value" id="tyVal">5 m</span>
+</label>
+<input id="ty" type="range" min="0" max="35"
+value="5">
+
+<div class="controls">
+<button onclick="shoot()">▶ NÉM BÓNG</button>
+<button onclick="pauseGame()">Ⅱ TẠM DỪNG</button>
+<button class="random full" onclick="randomTarget()">
+🎲 MỤC TIÊU NGẪU NHIÊN
+</button>
+<button class="reset full" onclick="resetGame()">
+↻ CHƠI LẠI LƯỢT
+</button>
+</div>
+
+<div class="target-info">
+<b>🎯 MỤC TIÊU HIỆN TẠI</b><br>
+Tọa độ X: <strong id="targetX">30 m</strong><br>
+Tọa độ Y: <strong id="targetY">5 m</strong><br>
+Đơn vị tọa độ: mét (m)
+</div>
+
+</div>
+
+<!-- KHU VỰC TRÒ CHƠI -->
+<div class="game">
+
+<h2>🔬 KHU VỰC THÍ NGHIỆM</h2>
+
+<canvas id="canvas"></canvas>
+
+<div class="stats">
+<div class="stat">
+<small>Thời gian</small>
+<strong id="time">0.00 s</strong>
+</div>
+<div class="stat">
+<small>Tọa độ X</small>
+<strong id="x">0.00 m</strong>
+</div>
+<div class="stat">
+<small>Độ cao Y</small>
+<strong id="y">10.00 m</strong>
+</div>
+<div class="stat">
+<small>Vận tốc</small>
+<strong id="velocity">20.00 m/s</strong>
+</div>
+</div>
+
+<div class="message" id="message">
+Sẵn sàng! Hãy điều chỉnh thông số và ném bóng.
+</div>
+
+<div class="score">
+<span>🏆 Điểm: <strong id="score">0</strong></span>
+<span>🎯 Số lần ném: <strong id="shots">0</strong></span>
+<span>✅ Trúng: <strong id="hits">0</strong></span>
+</div>
+
+<div class="target-info">
+<b>📐 THÔNG TIN VẬT LÍ</b><br>
+Vận tốc ngang: <strong id="vx">0 m/s</strong><br>
+Vận tốc đứng ban đầu: <strong id="vy">0 m/s</strong><br>
+Thời gian bay dự kiến: <strong id="flight">0 s</strong><br>
+Tầm xa dự kiến: <strong id="range">0 m</strong>
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const $ = id => document.getElementById(id);
+
+let elapsed = 0;
+let running = false;
+let finished = false;
+let animationId = null;
+let lastTime = 0;
+
+let score = 0;
+let shots = 0;
+let hits = 0;
+
+const g = 9.8;
+const radius = 1.25;
+
+function data() {
+
+    const v0 = Number($("v0").value);
+    const angle = $("mode").value === "horizontal"
+        ? 0 : Number($("angle").value);
+
+    const h = Number($("height").value);
+    const a = angle*Math.PI/180;
+
+    const vx = v0*Math.cos(a);
+    const vy = v0*Math.sin(a);
+
+    const flight =
+        (vy+Math.sqrt(vy*vy+2*g*h))/g;
+
+    const range = vx*flight;
+
+    const maxHeight = h+vy*vy/(2*g);
+
+    return {v0,angle,h,vx,vy,flight,range,maxHeight};
+}
+
+function position(t) {
+
+    const d = data();
+
+    return {
+        x:d.vx*t,
+        y:d.h+d.vy*t-0.5*g*t*t,
+        vx:d.vx,
+        vy:d.vy-g*t,
+        speed:Math.sqrt(
+            d.vx*d.vx+(d.vy-g*t)**2
+        )
+    };
+}
+
+function updateLabels() {
+
+    $("v0Val").textContent=$("v0").value+" m/s";
+    $("angleVal").textContent=
+        ($("mode").value==="horizontal" ? 0:$("angle").value)+"°";
+    $("heightVal").textContent=$("height").value+" m";
+    $("txVal").textContent=$("tx").value+" m";
+    $("tyVal").textContent=$("ty").value+" m";
+
+    $("targetX").textContent=$("tx").value+" m";
+    $("targetY").textContent=$("ty").value+" m";
+
+    $("angle").disabled=$("mode").value==="horizontal";
+    $("angle").style.opacity=
+        $("mode").value==="horizontal" ? ".35":"1";
+
+    const d=data();
+
+    $("vx").textContent=d.vx.toFixed(2)+" m/s";
+    $("vy").textContent=d.vy.toFixed(2)+" m/s";
+    $("flight").textContent=d.flight.toFixed(2)+" s";
+    $("range").textContent=d.range.toFixed(2)+" m";
+
+    if(!running) draw();
+}
+
+function resize() {
+    const rect=canvas.getBoundingClientRect();
+    const ratio=window.devicePixelRatio||1;
+
+    canvas.width=rect.width*ratio;
+    canvas.height=rect.height*ratio;
+
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    draw();
+}
+
+function draw() {
+
+    const W=canvas.clientWidth;
+    const H=canvas.clientHeight;
+
+    if(!W||!H)return;
+
+    const d=data();
+
+    const tx=Number($("tx").value);
+    const ty=Number($("ty").value);
+
+    ctx.clearRect(0,0,W,H);
+
+    // Tỉ lệ không gian
+    const maxX=Math.max(d.range,tx+5,20)*1.12;
+    const maxY=Math.max(
+        d.maxHeight,ty+3,d.h+3,10
+    )*1.18;
+
+    const margin=48;
+
+    const scale=Math.min(
+        (W-2*margin)/maxX,
+        (H-2*margin)/maxY
+    );
+
+    const ox=margin;
+    const ground=H-margin;
+
+    const sx=x=>ox+x*scale;
+    const sy=y=>ground-y*scale;
+
+    // Lưới
+    ctx.strokeStyle="#24334b";
+    ctx.lineWidth=1;
+
+    for(let i=0;i<W;i+=40) {
+        ctx.beginPath();
+        ctx.moveTo(i,0);
+        ctx.lineTo(i,H);
+        ctx.stroke();
+    }
+
+    for(let i=0;i<H;i+=40) {
+        ctx.beginPath();
+        ctx.moveTo(0,i);
+        ctx.lineTo(W,i);
+        ctx.stroke();
+    }
+
+    // Mặt đất
+    ctx.strokeStyle="#4ade80";
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(0,ground);
+    ctx.lineTo(W,ground);
+    ctx.stroke();
+
+    // Thước tọa độ ngang
+    ctx.fillStyle="#94a3b8";
+    ctx.font="11px Arial";
+    ctx.fillText("0 m",ox-10,ground+18);
+
+    for(let x=10;x<=maxX;x+=10) {
+        ctx.fillText(x+" m",sx(x)-10,ground+18);
+    }
+
+    // Bệ phóng
+    const baseX=sx(0);
+    const baseY=sy(d.h);
+
+    ctx.fillStyle="#64748b";
+    ctx.fillRect(baseX-17,baseY,34,ground-baseY);
+
+    ctx.fillStyle="#94a3b8";
+    ctx.fillRect(baseX-28,ground-5,56,8);
+
+    ctx.fillStyle="#38bdf8";
+    ctx.beginPath();
+    ctx.arc(baseX,baseY,8,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="white";
+    ctx.fillText("BỆ PHÓNG",baseX+10,ground+35);
+    ctx.fillText("h = "+d.h+" m",baseX+12,baseY-13);
+
+    // Quỹ đạo dự kiến
+    ctx.beginPath();
+    ctx.setLineDash([6,5]);
+    ctx.strokeStyle="#38bdf8";
+    ctx.lineWidth=2;
+
+    for(let t=0;t<=d.flight;t+=d.flight/250) {
+        const p=position(t);
+        if(t===0)ctx.moveTo(sx(p.x),sy(p.y));
+        else ctx.lineTo(sx(p.x),sy(p.y));
+    }
+
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Mục tiêu
+    const targetX=sx(tx);
+    const targetY=sy(ty);
+    const targetR=Math.max(9,radius*scale);
+
+    ctx.strokeStyle="#facc15";
+    ctx.lineWidth=4;
+
+    ctx.beginPath();
+    ctx.arc(targetX,targetY,targetR,0,Math.PI*2);
+    ctx.stroke();
+
+    ctx.fillStyle="#facc15";
+    ctx.beginPath();
+    ctx.arc(targetX,targetY,4,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="#facc15";
+    ctx.font="bold 13px Arial";
+
+    // Ghi tọa độ mục tiêu
+    ctx.fillText(
+        "MỤC TIÊU ("+tx+","+ty+") m",
+        Math.min(targetX+12,W-155),
+        Math.max(17,targetY-15)
+    );
+
+    // Đường dóng tọa độ mục tiêu
+    ctx.strokeStyle="#facc15";
+    ctx.setLineDash([3,5]);
+
+    ctx.beginPath();
+    ctx.moveTo(targetX,targetY);
+    ctx.lineTo(targetX,ground);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(ox,targetY);
+    ctx.lineTo(targetX,targetY);
+    ctx.stroke();
+
+    ctx.setLineDash([]);
+
+    // Vị trí bóng
+    const p=position(Math.min(elapsed,d.flight));
+
+    const bx=sx(p.x);
+    const by=sy(Math.max(0,p.y));
+
+    // Vệt quỹ đạo đã đi
+    if(elapsed>0) {
+        ctx.beginPath();
+        ctx.strokeStyle="#fb923c";
+        ctx.lineWidth=3;
+
+        const end=Math.min(elapsed,d.flight);
+
+        for(let t=0;t<=end;t+=Math.max(end/100,0.001)) {
+            const q=position(t);
+
+            if(t===0)ctx.moveTo(sx(q.x),sy(q.y));
+            else ctx.lineTo(sx(q.x),sy(q.y));
+        }
+
+        ctx.stroke();
+    }
+
+    // Bóng
+    ctx.shadowColor="#fb923c";
+    ctx.shadowBlur=15;
+    ctx.fillStyle="#fb923c";
+
+    ctx.beginPath();
+    ctx.arc(bx,by,8,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.shadowBlur=0;
+
+    // Cập nhật số liệu
+    $("time").textContent=elapsed.toFixed(2)+" s";
+    $("x").textContent=p.x.toFixed(2)+" m";
+    $("y").textContent=Math.max(0,p.y).toFixed(2)+" m";
+    $("velocity").textContent=p.speed.toFixed(2)+" m/s";
+}
+
+function updateScore() {
+    $("score").textContent=score;
+    $("shots").textContent=shots;
+    $("hits").textContent=hits;
+}
+
+function shoot() {
+
+    if(running)return;
+
+    const d=data();
+
+    if(finished) {
+        elapsed=0;
+        finished=false;
+    }
+
+    shots++;
+    updateScore();
+
+    $("message").textContent="🚀 Bóng đang chuyển động!";
+
+    running=true;
+    lastTime=0;
+
+    if(animationId!==null) {
+        cancelAnimationFrame(animationId);
+    }
+
+    function animate(timestamp) {
+
+        if(!running)return;
+
+        if(lastTime===0)lastTime=timestamp;
+
+        let dt=Math.min((timestamp-lastTime)/1000,0.05);
+        lastTime=timestamp;
+
+        elapsed+=dt;
+
+        const p=position(elapsed);
+
+        const tx=Number($("tx").value);
+        const ty=Number($("ty").value);
+
+        const distance=Math.sqrt(
+            (p.x-tx)**2+(p.y-ty)**2
+        );
+
+        // Kiểm tra va chạm mục tiêu
+        if(distance<=radius) {
+
+            elapsed=Math.min(elapsed,d.flight);
+
+            running=false;
+            finished=true;
+
+            hits++;
+            score+=10;
+
+            $("message").textContent=
+                "🎉 CHÚC MỪNG! BẠN ĐÃ TRÚNG MỤC TIÊU!";
+
+            updateScore();
+            draw();
+            return;
+        }
+
+        if(elapsed>=d.flight) {
+
+            elapsed=d.flight;
+            running=false;
+            finished=true;
+
+            $("message").textContent=
+                "❌ CHƯA TRÚNG! Hãy điều chỉnh góc hoặc vận tốc.";
+
+            draw();
+            return;
+        }
+
+        draw();
+
+        animationId=requestAnimationFrame(animate);
+    }
+
+    animationId=requestAnimationFrame(animate);
+}
+
+function pauseGame() {
+    running=false;
+
+    if(animationId!==null) {
+        cancelAnimationFrame(animationId);
+        animationId=null;
+    }
+
+    if(!finished) {
+        $("message").textContent="⏸ Đã tạm dừng.";
+    }
+}
+
+function resetGame() {
+
+    pauseGame();
+
+    elapsed=0;
+    finished=false;
+
+    $("message").textContent=
+        "Sẵn sàng! Hãy điều chỉnh thông số và ném bóng.";
+
+    draw();
+}
+
+function randomTarget() {
+
+    pauseGame();
+
+    const tx=Math.floor(Math.random()*56)+15;
+    const ty=Math.floor(Math.random()*16);
+
+    $("tx").value=tx;
+    $("ty").value=ty;
+
+    resetGame();
+    updateLabels();
+
+    $("message").textContent=
+        "🎲 Mục tiêu mới: ("+tx+","+ty+") m. Hãy thử sức!";
+}
+
+// Thay đổi thông số
+[
+    "mode","v0","angle","height","tx","ty"
+].forEach(id=>{
+    $(id).addEventListener("input",()=>{
+        if(running)pauseGame();
+
+        elapsed=0;
+        finished=false;
+
+        $("message").textContent=
+            "Đã thay đổi thông số. Sẵn sàng thử lại!";
+
+        updateLabels();
+    });
+});
+
+window.addEventListener("resize",resize);
+
+updateLabels();
+resize();
+updateScore();
+
+</script>
+</body>
+</html>
